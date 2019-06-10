@@ -2,6 +2,14 @@
 #include <malloc.h>
 #include <stdlib.h>
 
+/**
+ * @brief Search for the position of the vertex, in the matrix, of the list of links
+ * 
+ * @param linkList LinkList
+ * @param size Size of LinkList
+ * @param vertex Vertex to search
+ * @return size32_t Position
+ */
 size32_t MDA_Grafo_searchVertexPosition(char* linkList, size32_t size, char vertex){
     for(size32_t i = 0; i < size; i++){
         if(linkList[i] == vertex){
@@ -14,22 +22,24 @@ size32_t MDA_Grafo_searchVertexPosition(char* linkList, size32_t size, char vert
 
 MDA_Grafo* MDA_Grafo_load(const char* uri){
     MDA_Grafo* grafo = (MDA_Grafo*)malloc(sizeof(MDA_Grafo));
+    FILE* file;
     bool aux = false;
     char edge1 = ' ';
     char edge2 = ' ';
     size32_t edge1index;
     size32_t edge2index;
     long verticesPos;
-    grafo->file = fopen(uri, "r");
-    fscanf(grafo->file, "%u", &grafo->vertices);
-    fscanf(grafo->file, "%u", &grafo->edges);
+    
+    file = fopen(uri, "r");
+    fscanf(file, "%u", &grafo->vertices);
+    fscanf(file, "%u", &grafo->edges);
 
     grafo->linkList = (char*) malloc(sizeof(char) * grafo->vertices);
 
     for(size32_t i = 0; i < grafo->vertices; i++){
         grafo->linkList[i] = ' ';
         while(grafo->linkList[i] == ' ' || grafo->linkList[i] == '\n'){
-            fscanf(grafo->file, "%c", &grafo->linkList[i]);
+            fscanf(file, "%c", &grafo->linkList[i]);
         }
     }
 
@@ -48,18 +58,18 @@ MDA_Grafo* MDA_Grafo_load(const char* uri){
     }
 
     for(size32_t i = 0; i < grafo->edges; i++){
-        long oldPos = ftell(grafo->file);
+        long oldPos = ftell(file);
         long newPos;
         while(edge1 == ' ' || edge1 == '\n'){
-            fscanf(grafo->file, "%c", &edge1);
-            newPos = ftell(grafo->file);
+            fscanf(file, "%c", &edge1);
+            newPos = ftell(file);
             if(newPos == oldPos){
                 //nao consegue ler mais o arquivo(Can not read file)
                 printf("ERROR 3 - Can not read file\nThe number of edges is wrong in the file header\nCorrect number: %u\nPlease fix\n", i);
                 exit(EXIT_FAILURE);
             }
         }
-        fscanf(grafo->file, "%c", &edge2);
+        fscanf(file, "%c", &edge2);
 
         edge1index = MDA_Grafo_searchVertexPosition(grafo->linkList, grafo->vertices, edge1);
         edge2index = MDA_Grafo_searchVertexPosition(grafo->linkList, grafo->vertices, edge2);
@@ -75,6 +85,7 @@ MDA_Grafo* MDA_Grafo_load(const char* uri){
         grafo->matrix[edge1index][edge2index] = true;
         grafo->matrix[edge2index][edge1index] = true;
     }
+    fclose(file);
     return grafo;
 }
 
