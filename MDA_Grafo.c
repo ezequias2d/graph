@@ -29,7 +29,7 @@ MDA_Grafo* MDA_Grafo_load(const char* uri){
     size32_t edge1index;
     size32_t edge2index;
     long verticesPos;
-    
+
     file = fopen(uri, "r");
     fscanf(file, "%u", &grafo->vertices);
     fscanf(file, "%u", &grafo->edges);
@@ -110,3 +110,28 @@ bool MDA_Grafo_request(MDA_Grafo* grafo, char v1, char v2){
 
     return grafo->matrix[v1index][v2index] || grafo->matrix[v2index][v1index];
 }
+
+void MDA_Grafo_addEdge(MDA_Grafo* grafo, char v1, char v2){
+    size32_t v1index = MDA_Grafo_searchVertexPosition(grafo->linkList, grafo->vertices, v1);
+    size32_t v2index = MDA_Grafo_searchVertexPosition(grafo->linkList, grafo->vertices, v2);
+
+    if(grafo->matrix[v1index][v2index] == false){
+        grafo->edges++;
+    }
+
+    grafo->matrix[v1index][v2index] = true;
+    grafo->matrix[v2index][v1index] = true;
+}
+
+void MDA_Grafo_removeEdge(MDA_Grafo* grafo, char v1, char v2){
+    size32_t v1index = MDA_Grafo_searchVertexPosition(grafo->linkList, grafo->vertices, v1);
+    size32_t v2index = MDA_Grafo_searchVertexPosition(grafo->linkList, grafo->vertices, v2);
+
+    if(grafo->matrix[v1index][v2index] == true){
+        grafo->edges--;
+    }
+
+    grafo->matrix[v1index][v2index] = false;
+    grafo->matrix[v2index][v1index] = false;
+}
+

@@ -56,4 +56,6 @@ bool MDA_Grafo_request(MDA_Grafo* grafo, char v1, char v2);
  */
 void MDA_Grafo_print(MDA_Grafo* grafo);
 
+void MDA_Grafo_addEdge(MDA_Grafo* grafo, char v1, char v2);
+void MDA_Grafo_removeEdge(MDA_Grafo* grafo, char v1, char v2);
 #endif
