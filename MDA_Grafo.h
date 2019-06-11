@@ -27,6 +27,7 @@ struct MDA_Grafo{
     size32_t edges;    /**< number of edges*/
     bool** matrix;     /**< matrix itself*/
     char* linkList;    /**< list that links a character to a position of a dimension in the list*/
+    bool directional;
 };
 typedef struct MDA_Grafo MDA_Grafo;
 
@@ -36,7 +37,7 @@ typedef struct MDA_Grafo MDA_Grafo;
  * @param uri Uri of file
  * @return MDA_Grafo* Graph
  */
-MDA_Grafo* MDA_Grafo_load(const char* uri);
+MDA_Grafo* MDA_Grafo_load(const char* uri, bool directional);
 
 /**
  * @brief Request if the vertices are connected
@@ -58,4 +59,6 @@ void MDA_Grafo_print(MDA_Grafo* grafo);
 
 void MDA_Grafo_addEdge(MDA_Grafo* grafo, char v1, char v2);
 void MDA_Grafo_removeEdge(MDA_Grafo* grafo, char v1, char v2);
+
+size32_t MDA_Grafo_searchVertexPosition(char* linkList, size32_t size, char vertex);
 #endif
