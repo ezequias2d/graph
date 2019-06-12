@@ -13,12 +13,13 @@
 
 #include "MDA_Grafo.h"
 #include "LDA_Grafo.h"
+#include <limits.h>
 
 #define UNVERTEX (char)'\0'
-#define UNDEFINED -1
+#define UNDEFINED INT_MAX
 
-typedef enum {WHITE, GRAY, BLACK} color_t;
-typedef enum {MDA, LDA} conf_t;
+typedef enum {BWHITE, BGRAY, BBLACK} bcolor_t;
+typedef enum {BMDA, BLDA} bconf_t;
 
 struct BFS_QNode{
     char vertex;
@@ -33,7 +34,7 @@ struct BFS_QHead{
 typedef struct BFS_QHead BFS_QHead;
 
 struct BFS_Table{
-    color_t* colors;        /**< Color array*/
+    bcolor_t* colors;        /**< Color array*/
     char* father;           /**< Father array*/
     size32_t* distance;     /**< Distance array*/
     size32_t vertices;      /**< Number of vertices*/
@@ -41,7 +42,7 @@ struct BFS_Table{
         MDA_Grafo* mGrafo;  
         LDA_Grafo* lGrafo;
     };                      /**< Graph*/
-    conf_t conf;            /**< Type of graph struct*/
+    bconf_t conf;            /**< Type of graph struct*/
     BFS_QHead queue;        /**< Queue*/
 };
 typedef struct BFS_Table BFS_Table;
@@ -85,7 +86,7 @@ bool BFS_Q_empty(BFS_QHead head);
  * @param conf Type of structure to load(MDA or LDA)
  * @return BFS_Table* Breadth-First Search Table
  */
-BFS_Table* BFS_Table_create(char* grafoUri, conf_t conf);
+BFS_Table* BFS_Table_create(char* grafoUri, bconf_t conf, bool directional);
 
 /**
  * @brief Clean the Breadth-First Search Table

@@ -1,6 +1,7 @@
 #include "MDA_Grafo.h"
 #include <malloc.h>
 #include <stdlib.h>
+#include <limits.h>
 
 /**
  * @brief Search for the position of the vertex, in the matrix, of the list of links
@@ -47,20 +48,22 @@ MDA_Grafo* MDA_Grafo_load(const char* uri, bool directional){
     }
 
     grafo->matrix = (bool**)malloc(sizeof(bool*) * (grafo->vertices));
+    grafo->weight = (int**)malloc(sizeof(int*) * (grafo->vertices));
     
     for(size32_t i = 0; i < grafo->vertices; i++){
         grafo->matrix[i] = (bool*)malloc(sizeof(bool) * (grafo->vertices));
+        grafo->weight[i] = (int*)malloc(sizeof(int) * (grafo->vertices));
         for(size32_t j = 0; j < grafo->vertices; j++){
             grafo->matrix[i][j] = (i == j);
+            grafo->weight[i][j] = INT_MAX / grafo->vertices;
         }
     }
 
     for(size32_t i = 0; i < edges; i++){
         long oldPos = ftell(file);
         long newPos;
-        edge1 = ' ';
-        edge2 = ' ';
-        while(edge1 == ' ' || edge1 == '\n'){
+        
+        do{
             fscanf(file, "%c", &edge1);
             newPos = ftell(file);
             if(newPos == oldPos){
@@ -68,7 +71,7 @@ MDA_Grafo* MDA_Grafo_load(const char* uri, bool directional){
                 printf("ERROR 3 - Can not read file\nThe number of edges is wrong in the file header\nCorrect number: %u\nPlease fix\n", i);
                 exit(EXIT_FAILURE);
             }
-        }
+        } while(edge1 == ' ' || edge1 == '\n');
         fscanf(file, "%c", &edge2);
         
         if(edge2 == '\n' || edge2 == ' '){
@@ -108,6 +111,13 @@ bool MDA_Grafo_request(MDA_Grafo* grafo, char v1, char v2){
     return grafo->matrix[v1index][v2index];
 }
 
+int MDA_Grafo_requestWeight(MDA_Grafo* grafo, char v1, char v2){
+    size32_t v1index = MDA_Grafo_searchVertexPosition(grafo->linkList, grafo->vertices, v1);
+    size32_t v2index = MDA_Grafo_searchVertexPosition(grafo->linkList, grafo->vertices, v2);
+
+    return grafo->weight[v1index][v2index];
+}
+
 void MDA_Grafo_addEdge(MDA_Grafo* grafo, char v1, char v2){
     size32_t v1index = MDA_Grafo_searchVertexPosition(grafo->linkList, grafo->vertices, v1);
     size32_t v2index = MDA_Grafo_searchVertexPosition(grafo->linkList, grafo->vertices, v2);
@@ -122,9 +132,29 @@ void MDA_Grafo_addEdge(MDA_Grafo* grafo, char v1, char v2){
     }
 
     grafo->matrix[v1index][v2index] = true;
+    grafo->weight[v1index][v2index] = INT_MAX / grafo->vertices;
+
     if(!grafo->directional){
         grafo->matrix[v2index][v1index] = true;
+        grafo->weight[v2index][v1index] = INT_MAX / grafo->vertices;
     }
+}
+
+void MDA_Grafo_setEdgeWeight(MDA_Grafo* grafo, char v1, char v2, int weight){
+    size32_t v1index = MDA_Grafo_searchVertexPosition(grafo->linkList, grafo->vertices, v1);
+    size32_t v2index = MDA_Grafo_searchVertexPosition(grafo->linkList, grafo->vertices, v2);
+
+    if(v1index >= grafo->vertices || v2index >= grafo->vertices){
+        printf("ERROR 2 - Something wrong is not right.\nThe return of the position of the vertex in the matrix exceeds the limits of the same.\nEdge1Index: %u | Edge2Index: %u | Vertices: %u\n", v1index, v2index, grafo->vertices);
+        exit(EXIT_FAILURE);
+    }
+
+    if(grafo->matrix[v1index][v2index] == true){
+        grafo->weight[v1index][v2index] = weight;
+        if(!grafo->directional){
+            grafo->weight[v2index][v1index] = weight;
+        }
+    }   
 }
 
 void MDA_Grafo_removeEdge(MDA_Grafo* grafo, char v1, char v2){
@@ -136,8 +166,10 @@ void MDA_Grafo_removeEdge(MDA_Grafo* grafo, char v1, char v2){
     }
 
     grafo->matrix[v1index][v2index] = false;
+    grafo->weight[v1index][v2index] = INT_MAX;
     if(!grafo->directional){
         grafo->matrix[v2index][v1index] = false;
+        grafo->weight[v2index][v1index] = INT_MAX;
     }
 }
 

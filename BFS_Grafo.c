@@ -48,17 +48,17 @@ bool BFS_Q_empty(BFS_QHead head){
     return head.first == head.last && head.first == NULL;
 }
 
-BFS_Table* BFS_Table_create(char* grafoUri, conf_t conf){
+BFS_Table* BFS_Table_create(char* grafoUri, bconf_t conf, bool directional){
     BFS_Table* table = (BFS_Table*)malloc(sizeof(BFS_Table));
     table->conf = conf;
-    if(conf == MDA){
-        table->mGrafo = MDA_Grafo_load(grafoUri, false);
+    if(conf == BMDA){
+        table->mGrafo = MDA_Grafo_load(grafoUri, directional);
         table->vertices = table->mGrafo->vertices;
-    } else if(conf == LDA) {
-        table->lGrafo = LDA_Grafo_load(grafoUri);
+    } else if(conf == BLDA) {
+        table->lGrafo = LDA_Grafo_load(grafoUri, directional);
         table->vertices = table->lGrafo->vertices;
     }
-    table->colors = (color_t*)malloc(sizeof(color_t) * table->vertices);
+    table->colors = (bcolor_t*)malloc(sizeof(bcolor_t) * table->vertices);
     table->father = (char*)malloc(sizeof(char) * table->vertices);
     table->distance = (size32_t*)malloc(sizeof(size32_t) * table->vertices);
     table->queue = BFS_QHead_start();
@@ -69,7 +69,7 @@ BFS_Table* BFS_Table_create(char* grafoUri, conf_t conf){
 
 void BFS_Table_clean(BFS_Table* table){
     for(size32_t i = 0; i < table->vertices; i++){
-        table->colors[i] = WHITE;
+        table->colors[i] = BWHITE;
         table->father[i] = UNVERTEX;
         table->distance[i] = UNDEFINED;
     }
@@ -80,9 +80,9 @@ void BFS_Table_clean(BFS_Table* table){
 
 size32_t BFS_Table_searchVertexPosition(BFS_Table* table, char vertex){
     switch (table->conf){
-    case MDA:
+    case BMDA:
         return MDA_Grafo_searchVertexPosition(table->mGrafo->linkList, table->mGrafo->vertices, vertex);
-    case LDA:
+    case BLDA:
         return LDA_Grafo_searchVertexPosition(table->lGrafo->linkList, table->lGrafo->vertices, vertex);
     default:
         return UNDEFINED;
@@ -91,9 +91,9 @@ size32_t BFS_Table_searchVertexPosition(BFS_Table* table, char vertex){
 
 bool BFS_Table_request(BFS_Table* table, char v1, char v2){
     switch(table->conf){
-    case MDA:
+    case BMDA:
         return MDA_Grafo_request(table->mGrafo, v1, v2);
-    case LDA:
+    case BLDA:
         return LDA_Grafo_request(table->lGrafo, v1, v2);
     default:
         return false;
@@ -102,9 +102,9 @@ bool BFS_Table_request(BFS_Table* table, char v1, char v2){
 
 char BFS_Table_posToVertex(BFS_Table* table, size32_t pos){
     switch(table->conf){
-    case MDA:
+    case BMDA:
         return table->mGrafo->linkList[pos];
-    case LDA:
+    case BLDA:
         return table->lGrafo->linkList[pos];
     default:
         return UNVERTEX;
@@ -120,7 +120,7 @@ void BFS_Table_run(BFS_Table* table, char rootVertex){
 
     table->distance[posRoot] = 0;
     table->father[posRoot] = UNVERTEX;
-    table->colors[posRoot] = GRAY;
+    table->colors[posRoot] = BGRAY;
 
     BFS_Q_put(&table->queue, rootVertex);
 
@@ -131,16 +131,16 @@ void BFS_Table_run(BFS_Table* table, char rootVertex){
         for(size32_t i = 0; i < table->vertices; i++){
             vertexV = BFS_Table_posToVertex(table, i);
             if(BFS_Table_request(table, vertexU, vertexV)) {
-                if(table->colors[i] == WHITE){
+                if(table->colors[i] == BWHITE){
                     printf("V: %c\n", vertexV);
-                    table->colors[i] = GRAY;
+                    table->colors[i] = BGRAY;
                     table->distance[i] = table->distance[posU] + 1;
                     table->father[i] = vertexU;
                     BFS_Q_put(&table->queue, vertexV);
                 }
             }   
         }
-        table->colors[posU] = BLACK;
+        table->colors[posU] = BBLACK;
     }
 }
 
@@ -153,13 +153,13 @@ void BFS_Table_print(BFS_Table* table){
         size32_t distance = table->distance[i];
         switch (table->colors[i])
         {
-        case WHITE:
+        case BWHITE:
             color = 'W';
             break;
-        case GRAY:
+        case BGRAY:
             color = 'G';
             break;
-        case BLACK:
+        case BBLACK:
             color = 'B';
             break;
         default:

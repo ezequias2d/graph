@@ -26,6 +26,7 @@ struct MDA_Grafo{
     size32_t vertices; /**< number of vertices*/
     size32_t edges;    /**< number of edges*/
     bool** matrix;     /**< matrix itself*/
+    int** weight;
     char* linkList;    /**< list that links a character to a position of a dimension in the list*/
     bool directional;
 };
@@ -49,6 +50,8 @@ MDA_Grafo* MDA_Grafo_load(const char* uri, bool directional);
  * @return false The vertices are disconnected
  */
 bool MDA_Grafo_request(MDA_Grafo* grafo, char v1, char v2);
+
+int MDA_Grafo_requestWeight(MDA_Grafo* grafo, char v1, char v2);
 
 /**
  * @brief Prints the graph table

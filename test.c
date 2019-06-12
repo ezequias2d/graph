@@ -20,7 +20,7 @@ void testMDA(){
     // }
 }
 void testLDA(){
-    LDA_Grafo* grafo = LDA_Grafo_load("grafo.data");
+    LDA_Grafo* grafo = LDA_Grafo_load("grafo.data", false);
     LDA_Grafo_print(grafo);
     LDA_Grafo_removeEdge(grafo, 'D', 'E');
     LDA_Grafo_print(grafo);
@@ -36,7 +36,7 @@ void testLDA(){
     // }
 }
 void testBFS_MDA(){
-    BFS_Table* table = BFS_Table_create("grafo2.data", MDA);
+    BFS_Table* table = BFS_Table_create("grafo2.data", BMDA, false);
     BFS_Table_run(table, 'S');
     BFS_Table_print(table);
     BFS_Table_printPath(table, 'S', 'Y');
@@ -44,7 +44,7 @@ void testBFS_MDA(){
 }
 
 void testDFS_MDA(){
-    DFS_Table* table = DFS_Table_create("grafo2.data", MDA);
+    DFS_Table* table = DFS_Table_create("grafo2.data", DMDA, true);
     DFS_Table_run(table);
     DFS_Table_print(table);
     printf("\n");
