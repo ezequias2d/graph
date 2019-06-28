@@ -1,3 +1,13 @@
+/**
+ * @file Kruskal_Grafo.h
+ * @author Ezequias Silva (ezequiasmoises@gmail.com)
+ * @brief Algoritimo de Kruskal para grafo
+ * @version 0.1
+ * @date 2019-06-28
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
 #ifndef Kruskal_Grafo_H
 #include <limits.h>
 #include "MDA_Grafo.h"
@@ -19,45 +29,40 @@ struct Kruskal_Grafo{
 };
 typedef struct Kruskal_Grafo Kruskal_Grafo;
 
-
-
 /**
- * @brief Create a Breadth-First Search Table
+ * @brief Create a Kruskal Struct
  * 
  * @param grafoUri Uri of Graph to load
  * @param conf Type of structure to load(MDA or LDA)
- * @return DFS_Table* Breadth-First Search Table
+ * @return DFS_kGrafo* Breadth-First Search kGrafo
  */
 Kruskal_Grafo* Kruskal_Grafo_create(char* grafoUri, kconf_t conf);
 
 /**
- * @brief Clean the Breadth-First Search Table
+ * @brief Clean the Kruskal struct
  * 
- * @param table Breadth-First Search Table
+ * @param kGrafo Kruskal struct to clean
  */
-void Kruskal_Grafo_clean(Kruskal_Grafo* table);
+void Kruskal_Grafo_clean(Kruskal_Grafo* kGrafo);
 
 /**
- * @brief Runs the Breadth-First Search algorithm(executa o algoritimo de busca em largura)
+ * @brief Runs the Kruskal MST algorithm
  * 
- * @param table Breadth-First Search Table
- * @param rootVertex Root Vertex
+ * @param kGrafo Kruskal struct
  */
-int Kruskal_Grafo_run(Kruskal_Grafo* pGrafo);
+int Kruskal_Grafo_run(Kruskal_Grafo* kGrafo);
 
-void Kruskal_Grafo_visit(Kruskal_Grafo* table, size32_t pos);
-
-size32_t Kruskal_Grafo_searchVertexPosition(Kruskal_Grafo* pGrafo, char vertex);
-bool Kruskal_Grafo_request(Kruskal_Grafo* pGrafo, char v1, char v2);
-int Kruskal_Grafo_requestWeight(Kruskal_Grafo* pGrafo, char v1, char v2);
-char Kruskal_Grafo_posToVertex(Kruskal_Grafo* pGrafo, size32_t pos);
+size32_t Kruskal_Grafo_searchVertexPosition(Kruskal_Grafo* kGrafo, char vertex);
+bool Kruskal_Grafo_request(Kruskal_Grafo* kGrafo, char v1, char v2);
+int Kruskal_Grafo_requestWeight(Kruskal_Grafo* kGrafo, char v1, char v2);
+char Kruskal_Grafo_posToVertex(Kruskal_Grafo* kGrafo, size32_t pos);
 
 /**
- * @brief Print Breadth-First Search Table
+ * @brief Print Kruskal struct
  * 
- * @param table Breadth-First Search Table
+ * @param kGrafo Kruskal struct
  */
-void Kruskal_Grafo_print(Kruskal_Grafo* table);
+void Kruskal_Grafo_print(Kruskal_Grafo* kGrafo);
 
 
 
