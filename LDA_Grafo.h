@@ -32,13 +32,16 @@ struct LDA_Grafo{
 typedef struct LDA_Grafo LDA_Grafo;
 
 LDA_Grafo* LDA_Grafo_load(const char* uri, bool directional);
+LDA_Grafo* LDA_Grafo_loadWithWeight(const char* uri, bool directional);
 
 void LDA_Grafo_print(LDA_Grafo* grafo);
+void LDA_Grafo_printWithWeight(LDA_Grafo* grafo);
 
 bool LDA_Grafo_request(LDA_Grafo* grafo, char v1, char v2);
 int LDA_Grafo_requestWeight(LDA_Grafo* grafo, char v1, char v2);
 
 void LDA_Grafo_addEdge(LDA_Grafo* grafo, char v1, char v2);
+void LDA_Grafo_addEdgeWithWeight(LDA_Grafo* grafo, char v1, char v2, int weight);
 void LDA_Grafo_setEdgeWeight(LDA_Grafo* grafo, char v1, char v2, int weight);
 void LDA_Grafo_removeEdge(LDA_Grafo* grafo, char v1, char v2);
 

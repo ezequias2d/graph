@@ -40,6 +40,8 @@ typedef struct MDA_Grafo MDA_Grafo;
  */
 MDA_Grafo* MDA_Grafo_load(const char* uri, bool directional);
 
+MDA_Grafo* MDA_Grafo_loadWithWeight(const char* uri, bool directional);
+
 /**
  * @brief Request if the vertices are connected
  * 
@@ -60,7 +62,11 @@ int MDA_Grafo_requestWeight(MDA_Grafo* grafo, char v1, char v2);
  */
 void MDA_Grafo_print(MDA_Grafo* grafo);
 
+void MDA_Grafo_printWithWeight(MDA_Grafo* grafo);
+
 void MDA_Grafo_addEdge(MDA_Grafo* grafo, char v1, char v2);
+void MDA_Grafo_addEdgeWithWeight(MDA_Grafo* grafo, char v1, char v2, int weight);
+
 void MDA_Grafo_removeEdge(MDA_Grafo* grafo, char v1, char v2);
 
 size32_t MDA_Grafo_searchVertexPosition(char* linkList, size32_t size, char vertex);
