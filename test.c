@@ -4,6 +4,7 @@
 #include "DFS_Grafo.h"
 #include "Prim_Grafo.h"
 #include "Kruskal_Grafo.h"
+#include "Bellmanford_Grafo.h"
 
 void testMDA(){
     MDA_Grafo* grafo = MDA_Grafo_loadWithWeight("grafo-weight.data", false);
@@ -46,7 +47,7 @@ void testBFS_MDA(){
 }
 
 void testDFS_MDA(){
-    DFS_Table* table = DFS_Table_create("grafo2.data", DLDA, true);
+    DFS_Table* table = DFS_Table_create("grafo2.data", DMDA, true);
     DFS_Table_run(table);
     DFS_Table_print(table);
     printf("\n");
@@ -74,12 +75,25 @@ void testKruskal_Grafo(){
     Kruskal_Grafo_print(pGrafoL);
 }
 
+void testBellmanford_Grafo(){
+    BellmanFord_Grafo* bGrafoM = BellmanFord_Grafo_create("grafo-weight.data", MMDA);
+    BellmanFord_Grafo* bGrafoL = BellmanFord_Grafo_create("grafo-weight.data", MLDA);
+
+    BellmanFord_Grafo_run(bGrafoM, BellmanFord_Grafo_posToVertex(bGrafoM, 0));
+    BellmanFord_Grafo_run(bGrafoL, BellmanFord_Grafo_posToVertex(bGrafoL, 0));
+
+    BellmanFord_Grafo_print(bGrafoM);
+    BellmanFord_Grafo_print(bGrafoL);
+
+}
+
 int main(){
     //testMDA();
     // printf("---------------\n");
     //testLDA();
     //testBFS_MDA();
-    //testDFS_MDA();
+    testDFS_MDA();
     //testPrim_Grafo();
-    testKruskal_Grafo();
+    //testKruskal_Grafo();
+    //testBellmanford_Grafo();
 }
